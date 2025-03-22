@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
 
-// Menentukan tipe untuk props
 interface WatchProps {
   onTimeUpdate: (newTime: string) => void;
 }
 
 export function Watch({ onTimeUpdate }: WatchProps) {
-  const [time, setTime] = useState<string>(new Date().toLocaleTimeString());
+  const getFormattedTime = () => {
+    return new Date().toLocaleTimeString("en-GB", { hour12: false });
+  };
 
-  // Update time setiap detik
+  const [,setTime] = useState<string>(getFormattedTime());
+
   useEffect(() => {
     const interval = setInterval(() => {
-      const newTime = new Date().toLocaleTimeString();
+      const newTime = getFormattedTime();
       setTime(newTime);
-      // Kirim data waktu ke komponen lain melalui callback
       onTimeUpdate(newTime);
     }, 1000);
 
     return () => clearInterval(interval);
   }, [onTimeUpdate]);
 
-  return null; // Komponen ini hanya menangani data, tidak menampilkan apa pun
+  return null;
 }
